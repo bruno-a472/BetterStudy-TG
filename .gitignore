@@ -1,0 +1,30 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de Configuração Local e Segredos
+*.env
+
+# Banco de Dados SQLite
+# Geralmente não se envia o banco de dados para o Git,
+# apenas o código que o cria.
+*.db
+*.sqlite3
+
+# Pastas de IDEs e Editores
+.vscode/
+.idea/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de log
+*.log
