@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DadosService {
-  private apiUrlLogin = 'https://siga-notas-full-stack.onrender.com/api/login'; // URL login
-  private apiUrlConfirmacao = 'https://siga-notas-full-stack.onrender.com/api/login/confirmacao'; // URL confirmação
-  private apiUrlNotas = 'https://siga-notas-full-stack.onrender.com/api/notas'; // URL notas
+  private apiUrlLogin = 'http://localhost:5000/api/login'; // URL login
+  private apiUrlConfirmacao = 'http://localhost:5000/api/login/confirmacao'; // URL confirmação
+  private apiUrlNotas = 'http://localhost:5000/api/notas'; // URL notas
 
   constructor(private http: HttpClient) { }
 
