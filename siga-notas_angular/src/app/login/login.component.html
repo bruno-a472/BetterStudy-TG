@@ -1,0 +1,18 @@
+<div class="tela-inteira" *ngIf="visualizacao">
+    <div class="box"></div>
+    <div class="area-login">
+        <div class="cabecalho">
+            <div class="logo-box">
+                <img class="logo-imagem" src="logo.png"/>
+                <h1 class="logo-texto">BetterStudy</h1>
+            </div>
+            <p class="instrucao">Faça o login do Siga</p>
+        </div>
+
+        <form class="login">
+            <input class="login-email" type="text" placeholder="Usuário">
+            <input class="login-senha" type="password" placeholder="Senha">
+            <button class="login-botao" type="button" (click)="iniciarLogin()">Entrar</button>
+        </form>
+    </div>
+</div>

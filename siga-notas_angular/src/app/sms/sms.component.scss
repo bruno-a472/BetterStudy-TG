@@ -1,0 +1,95 @@
+.tela-inteira {
+
+    padding-inline: 80px;
+    display: flex;
+    // background-color: black;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    @media (max-width: 800px) {
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.box {
+    background-color: #0c75ff;
+    width: 58%;
+
+    @media (max-width: 800px) {
+        display: none;
+    }
+}
+
+.area-login {
+    // background-color: #e2f3ff;
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    margin-left: 20px;
+    @media (max-width: 800px) {
+        width: 100%;
+        min-height: 100vh;
+    }
+}
+
+.login {
+    width: 100%;
+    max-width: 305px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login input, button {
+    width: 100%;
+    height: 60px;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.login button {
+    background-color: #0c75ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.login button:hover {
+    background-color: #1b63ec; 
+}
+
+
+.logo-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.logo-imagem {
+ 
+    width: 88px;
+    height: 88px;
+}
+
+.logo-texto {
+    font-size: 36px;
+    font-weight: 400;
+    font-family: "Ubuntu", sans-serif;
+}
+
+.instrucao {
+    text-align: center;
+    text-justify: center;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 400;
+    font-size: 25px;
+}

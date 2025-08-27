@@ -1,0 +1,17 @@
+<div class="tela-inteira" *ngIf="visualizacao">
+    <div class="box"></div>
+    <div class="area-login">
+        <div class="cabecalho">
+            <div class="logo-box">
+                <img class="logo-imagem" src="logo.png"/>
+                <h1 class="logo-texto">BetterStudy</h1>
+            </div>
+            <p class="instrucao">Digite o código de confirmação</p>
+        </div>
+
+        <form class="login">
+            <input class="codigo" type="text" placeholder="Código">
+            <button class="login-botao" type="button" (click)="confirmarLogin()">Entrar</button>
+        </form>
+    </div>
+</div>

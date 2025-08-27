@@ -1,0 +1,30 @@
+<div class="painel-materias" *ngIf="visualizacao">
+
+    <div class="thumb-esquerda">
+        <a routerLink="../atual"><img src="seta.png"></a>
+    </div>
+    <div class="espaco-materias">
+        <div class="espaco-materias-titulo"><h2>Matérias de todos os semestres</h2></div>
+        
+        <section class="container-materias">
+            <div class="loading" *ngIf="this.materiaService.getNotasCarregandoEstado()">
+                Carregando...
+            </div>
+            <app-materia class="materia" *ngFor="let materia of this.materiaService.getAllMateriasHistoricas()" [mat]="materia"></app-materia>
+        </section>
+    </div>
+    <div class="thumb-direita"><img src="seta_cinza.png"></div>
+
+</div>
+
+<div class="painel-ia" *ngIf="visualizacao">
+    <div class="espaco-ia">
+        <div class="espaco-ia-titulo">Análise da IA para todos os semestres</div>
+        <div class="espaco-ia-texto">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in nibh non odio ullamcorper feugiat non efficitur mi. Integer eleifend sapien magna, in mattis turpis finibus nec. Maecenas mollis nec justo sit amet interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit, mi non tempor gravida, mauris purus feugiat turpis, tincidunt porta nisi enim vitae purus. 
+
+            Donec posuere, sem ac viverra commodo, tellus neque aliquet tellus, non pharetra lectus neque pellentesque purus. Mauris nibh ipsum, lobortis ac suscipit vitae, eleifend non neque. Donec ullamcorper aliquet nunc, in bibendum mi imperdiet sed. Quisque vel arcu et nisl viverra tincidunt eget sed arcu. Duis id placerat justo. Proin malesuada felis id tincidunt laoreet. Quisque consequat tempor bibendum. Ut sit amet nisl ex. Duis a libero nibh. Cras facilisis nibh elit, at scelerisque neque auctor quis. Suspendisse sodales non erat vel congue.
+            Sed quis ante sagittis, tempus neque fermentum, bibendum nisi. Aliquam consequat mi ex, vitae tincidunt nulla gravida hendrerit. Aenean suscipit efficitur elit, in elementum augue consequat vitae. Pellentesque accumsan fringilla ex ac egestas.
+        </div>
+    </div>
+</div>

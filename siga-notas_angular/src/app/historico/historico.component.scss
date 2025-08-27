@@ -1,0 +1,116 @@
+.painel-materias {
+    display: flex;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .espaco-materias {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  
+    .espaco-materias-titulo {
+      background-color: #0c75ff;
+    }
+    div {
+      padding: 16px;
+    }
+    h2 {
+      color: #fff;
+      text-align: center;
+      font-family: "Ubuntu", sans-serif;
+      font-weight: 600;
+      font-size: 32px;
+    }
+    section {
+      background-color: #e2f3ff;
+      height: 100%;
+      padding: 5vh;
+    }
+  }
+  
+  .container-materias {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    // align-content: flex-start;
+    justify-content: center;
+    gap: 2vh;
+    max-height: 100%;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      // Personaliza a barra de rolagem
+      height: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #aaa; // Cor da barra de rolagem
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #e0e0e0; // Fundo da barra de rolagem
+    }
+  
+    // .materia {
+    //   margin-top: 2vh;
+    // }
+  }
+  
+  .painel-materias {
+    display: flex;
+  
+    height: 570px;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+  
+    .thumb-esquerda,
+    .thumb-direita {
+      display: flex;
+      flex-direction: column; //Não estava travando pro meio
+      background-color: #bae0ff;
+      justify-content: center;
+      align-content: center;
+      padding: 8px;
+  
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  
+    .thumb-esquerda {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      img {
+        transform: rotate(-90deg);
+      }
+    }
+  
+    .thumb-direita {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      img {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  
+  .painel-ia {
+    margin-top: 48px;
+    padding-inline: 100px;
+  
+    .espaco-ia {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .espaco-ia-titulo {
+      font-family: "Ubuntu", sans-serif;
+      font-weight: 600;
+      font-size: 48px;
+      margin-bottom: 32px;
+    }
+  
+    .espaco-ia-texto {
+      font-size: 18px;
+    }
+  }
+  

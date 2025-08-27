@@ -1,0 +1,69 @@
+.card-materia {
+    background-color: #fff;
+    font-family: "Urbanist", sans-serif;
+    font-weight: 600;
+    // height: 40vh;
+    min-height: 20vh;
+    // max-height: 43vh;
+    min-width: fit-content;
+    max-width: 15vw;
+    width: 20vw;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.card-header {
+    @media (max-width: 1000x) {
+        height: 8vh;
+    }   
+    & {max-width: 20vw;
+    height: 10vh;
+    padding: 5px;
+    background-color: #17a8ff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    text-align: center;
+    justify-content: center;}
+}
+
+.nome-materia {
+    @media (max-width: 1300px) {
+        font-size: 20px;
+    }
+    @media (max-width: 1000px) {
+        font-size: 18px;
+    }
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
+    & {font-size: 24px;
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; // Define o limite para duas linhas
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    text-overflow: ellipsis;}
+}
+
+.card-body {
+    padding: 5px;
+
+    height: 80px;
+    justify-content: center;
+    align-content: center;
+}
+
+
+.nota-materia, .abc-materia {
+    @media (max-width: 1300px) {
+        font-size: 16px;
+    }
+    @media (max-width: 1000px) {
+        font-size: 12px;
+    }
+    @media (max-width: 600px) {
+        font-size: 8px;
+    }
+    & {font-size: 18px;}
+}

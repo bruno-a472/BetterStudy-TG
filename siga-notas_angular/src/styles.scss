@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+* { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+.header {
+    background-color: #0c74ff;
+    height: 85px;
+}
+
+.carregando {
+    margin-top: 300px;
+    font-size: 40px;
+    font-weight: 500;
+    justify-self: center;
+    align-self: center;
+}

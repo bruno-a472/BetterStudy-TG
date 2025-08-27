@@ -1,0 +1,15 @@
+<div class="header"></div>
+<div class="tela-inteira" *ngIf="visualizacao">
+    <div class="cabecalho">
+        <div class="logo-box">
+            <img class="logo-imagem" src="logo.png"/>
+            <h1 class="logo-texto">BetterStudy</h1>
+        </div>
+        <p class="saudacao">Olá, {{nome}}!</p>
+    </div>
+    <!-- <app-materia></app-materia> -->
+    <!-- <button class="login-botao" type="button" (click)="pegarNotas()">Notas</button> -->
+    <!-- <router-outlet [materias]="materiaList"></router-outlet> -->
+    
+    <router-outlet></router-outlet>
+</div>

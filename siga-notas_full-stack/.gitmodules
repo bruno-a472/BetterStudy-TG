@@ -1,0 +1,3 @@
+[submodule "siga-notas_angular"]
+	path = siga-notas_angular
+	url = https://github.com/bruno-a472/siga-notas_angular
