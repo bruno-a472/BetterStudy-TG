@@ -89,6 +89,19 @@ def confirmacao(c: str, id: int):
         campo_codigo.send_keys(Keys.ENTER)
 
         try:
+            print('\n\nVerificando se o site está em manutenção...')
+            warning_span = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "gx-warning-message")))
+            if "manutenção" in warning_span.text.lower():
+                resposta = {'bool': False, 'erro': 'Site em manutenção'}
+                print('Site em manutenção detectado.')
+                resposta = json.dumps(resposta, ensure_ascii=False, indent=4)
+                # driver.quit()
+                return resposta
+        except Exception:
+            print('Site não está em manutenção, continuando...')
+            pass
+        try:
+            print('\nEntrou no try do nome')
             span = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "uc_appuser-name")))
             nome = 'vazio'
             nome = str(span.text.strip().lower()).split(' ')[1].capitalize()
@@ -98,11 +111,12 @@ def confirmacao(c: str, id: int):
             else:
                 print("Não foi encontrado o nome:", nome)
         except Exception as e:
+            # driver.quit()
             print(e)
         except TimeoutException:
             print('Timeout no Login, ID:', id)
             time.sleep(3)
-            driver.quit()
+            # driver.quit()
             resposta = {'bool': False, 'erro': 'Timeout'}
     except Exception as e:
         print("Um problema foi encontrado:", e)
@@ -116,7 +130,7 @@ def scrapeNotas(id: int):
     print("Fazer_scrape")
     driver: webdriver.Chrome = arvore.encontra(id).obtemDriver()
     wait = WebDriverWait(driver, 8)
-    time.sleep(3)
+    # time.sleep(3)
     print("Fazer_scrape Iniciando")
     try:
         # 1 - Clicar em "meu curso"
@@ -178,11 +192,11 @@ def scrapeNotas(id: int):
                 continue
         # Gerar estrutura final
         parcial = [
-            {"tipo": "a", "nome": materia, "nota": nota, "abc": "D", "status": status}
+            {"tipo": "a", "nome": materia, "nota": nota, "abc": rank_nota(nota), "status": status}
             for materia, nota, status in zip(mates_p, notas_p, status_list_p)
         ]
         historico = [
-            {"tipo": "h", "nome": materia, "nota": nota, "abc": "D", "status": status}
+            {"tipo": "h", "nome": materia, "nota": nota, "abc": rank_nota(nota), "status": status}
             for materia, nota, status in zip(mates_h, notas_h, status_list_h)
         ]
 
@@ -190,6 +204,9 @@ def scrapeNotas(id: int):
             "parciais": parcial,
             "historicas": historico
         }
+
+        with open(f"resultado_notas_{id}.json", "w", encoding="utf-8") as f:
+            json.dump(resultado, f, ensure_ascii=False, indent=4)
 
         return json.dumps(resultado, ensure_ascii=False, indent=4)
     
@@ -200,6 +217,18 @@ def scrapeNotas(id: int):
         time.sleep(3)
         driver.quit()
 
+def rank_nota(nota_str):
+    try:
+        nota = float(nota_str.replace(',', '.'))
+    except Exception:
+        return "C"
+    if 8 <= nota <= 10:
+        return "A"
+    elif 4 <= nota < 8:
+        return "B"
+    elif 0 <= nota < 4:
+        return "C"
+    return "C"
 
 app = Flask(__name__)
 CORS(app)
@@ -217,12 +246,12 @@ def receber_login():
     # print(dados)  # Adicionar em caso de testes
     chrome_options = Options()
     # chrome_options.add_experimental_option('detach', True)
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")  
-    chrome_options.add_argument("--no-sandbox")  
-    chrome_options.add_argument("--disable-dev-shm-usage")  
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-infobars")
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-gpu")  
+    # chrome_options.add_argument("--no-sandbox")  
+    # chrome_options.add_argument("--disable-dev-shm-usage")  
+    # chrome_options.add_argument("--disable-extensions")
+    # chrome_options.add_argument("--disable-infobars")
 
     id = ids.geraId()
     # Inserir primeira árvore que possui Driver

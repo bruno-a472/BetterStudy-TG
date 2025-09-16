@@ -35,3 +35,7 @@ coverage/
 # --- Outros ---
 .DS_Store
 Thumbs.db
+
+
+# --- Resultado notas ---
+resultado_notas_*.json
