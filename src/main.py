@@ -1,27 +1,48 @@
-from pathlib import Path
-import database
-import llm
+from flask import Flask, request, jsonify
+import llm  
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-
-PROJECT_ROOT = Path(__file__).resolve().parent
-
-DB_FILE_PATH = PROJECT_ROOT / "data" / "escola.db"
-
-DB_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
+app = Flask(__name__)
 
 
-def main():
-    print(f"Caminho do banco de dados: {DB_FILE_PATH}")
+@app.route("/")
+def health_check():
+    return jsonify(
+        {
+            "status": "ok",
+            "message": "Serviço de IA para Análise de Desempenho está online!",
+        }
+    )
 
-    database.initialize_db(DB_FILE_PATH)
-    notas = database.get_data_grades(DB_FILE_PATH)
 
-    if notas:
-        llm.create_report_abc(notas)
+@app.route("/analise", methods=["POST"])
+def gerar_relatorio_api():
+    """
+    Endpoint principal que recebe os dados do aluno e retorna a análise.
+    """
+    print("Recebida requisição para gerar relatório de desempenho...")
+    dados_recebidos = request.get_json()
+
+    if not dados_recebidos or (
+        "parciais" not in dados_recebidos and "historicas" not in dados_recebidos
+    ):
+        return jsonify(
+            {"erro": "A requisição deve conter as chaves 'parciais' e/ou 'historicas'."}
+        ), 400
+
+    disciplinas_parciais = dados_recebidos.get("parciais", [])
+    disciplinas_historicas = dados_recebidos.get("historicas", [])
+    todas_as_disciplinas = disciplinas_historicas + disciplinas_parciais
+
+    if not todas_as_disciplinas:
+        return jsonify({"erro": "Nenhuma disciplina foi fornecida para análise."}), 400
+
+    report_content, status_code = llm.generate_ollama_report(todas_as_disciplinas)
+
+    if status_code == 200:
+        return jsonify({"relatorio_desempenho": report_content}), 200
     else:
-        print("Nenhum dado encontrado no banco de dados para análise.")
+        return jsonify({"erro": report_content}), status_code
 
 
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", port=5000, debug=True)

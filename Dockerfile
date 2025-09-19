@@ -3,10 +3,10 @@ FROM python:3.10-slim
 WORKDIR /app
 
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./src/ .
-COPY ./data/ ./data/
+COPY ./src .
 
-CMD ["sleep", "infinity"] 
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "0", "--graceful-timeout", "0", "main:app"]

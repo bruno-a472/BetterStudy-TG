@@ -1,0 +1,300 @@
+{
+    "parciais": [
+        {
+            "tipo": "a",
+            "nome": "Laboratório de Big Data em Agricultura",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        },
+        {
+            "tipo": "a",
+            "nome": "Aprendizado de Máquina",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        },
+        {
+            "tipo": "a",
+            "nome": "Inteligência Artificial",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        },
+        {
+            "tipo": "a",
+            "nome": "Arquitetura de APIs",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        },
+        {
+            "tipo": "a",
+            "nome": "Estágio Curricular Supervisionado em Big Data no Agronegócio",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        },
+        {
+            "tipo": "a",
+            "nome": "Trabalho de Graduação em Big Data no Agronegócio",
+            "nota": "0,0",
+            "abc": "C",
+            "status": "Em Curso"
+        }
+    ],
+    "historicas": [
+        {
+            "tipo": "h",
+            "nome": "Sociedade, Tecnologia e Inovação",
+            "nota": "7,3",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Introdução a Big Data",
+            "nota": "6,5",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Lógica de Programação",
+            "nota": "9,7",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Ética e Valores",
+            "nota": "6,2",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Fundamentos de Leitura e Produção de Textos",
+            "nota": "8,8",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês I",
+            "nota": "9,0",
+            "abc": "A",
+            "status": "Dispensado por Proficiência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Matemática Discreta",
+            "nota": "9,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Produção Vegetal de Culturas Anuais",
+            "nota": "9,7",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Java I - Orientação a Objetos",
+            "nota": "7,2",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Internet das Coisas",
+            "nota": "7,7",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Cálculo",
+            "nota": "8,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Produção Vegetal de Culturas Perenes e Green Houses",
+            "nota": "8,5",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Fundamentos de Administração Geral",
+            "nota": "8,8",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês II",
+            "nota": "10,0",
+            "abc": "A",
+            "status": "Dispensado por Proficiência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Fundamentos de Gestão de Projetos",
+            "nota": "8,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Estatística",
+            "nota": "9,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês III",
+            "nota": "10,0",
+            "abc": "A",
+            "status": "Dispensado por Proficiência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Java II- Sistemas Web",
+            "nota": "10,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Bancos de Dados",
+            "nota": "8,5",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Programação Front-End",
+            "nota": "8,5",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Geometria Analítica",
+            "nota": "9,2",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Manejos Agrícolas de Solo e Semeadura",
+            "nota": "9,4",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês IV",
+            "nota": "9,0",
+            "abc": "A",
+            "status": "Dispensado por Proficiência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Manejos Agrícolas de Trato Culturais e Colheita",
+            "nota": "6,8",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Algoritmos Avançados",
+            "nota": "7,7",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Web Semântica",
+            "nota": "7,3",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Redes de Computadores",
+            "nota": "6,5",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Empreendedorismo",
+            "nota": "10,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Bancos de Dados noSQL",
+            "nota": "9,7",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Gestão de Dados",
+            "nota": "8,0",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Introdução ao Data Mining",
+            "nota": "9,2",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Arquiteturas Cloud",
+            "nota": "8,9",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Projeto de Internet das Coisas",
+            "nota": "8,2",
+            "abc": "A",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Monitoramento de Pragas e Doenças",
+            "nota": "7,0",
+            "abc": "B",
+            "status": "Aprovado por Nota e Frequência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês V",
+            "nota": "9,0",
+            "abc": "A",
+            "status": "Dispensado por Proficiência"
+        },
+        {
+            "tipo": "h",
+            "nome": "Inglês VI",
+            "nota": "6,0",
+            "abc": "B",
+            "status": "Dispensado por Proficiência"
+        }
+    ]
+}
