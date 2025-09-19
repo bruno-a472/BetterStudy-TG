@@ -1,7 +1,7 @@
-
-from flask import Flask, request
+from datetime import datetime
+import os
+from flask import Flask, jsonify, request
 from flask_cors import CORS # type: ignore
-
 import time
 import json
 from selenium import webdriver
@@ -15,6 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import arvoreDriver
 import gera_id
+
 
 
 # Instanciar o gerador de ID
@@ -245,13 +246,13 @@ def receber_login():
     s = dados['senha']
     # print(dados)  # Adicionar em caso de testes
     chrome_options = Options()
-    # chrome_options.add_experimental_option('detach', True)
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--disable-gpu")  
-    # chrome_options.add_argument("--no-sandbox")  
-    # chrome_options.add_argument("--disable-dev-shm-usage")  
-    # chrome_options.add_argument("--disable-extensions")
-    # chrome_options.add_argument("--disable-infobars")
+    chrome_options.add_experimental_option('detach', True)
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")  
+    chrome_options.add_argument("--no-sandbox")  
+    chrome_options.add_argument("--disable-dev-shm-usage")  
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-infobars")
 
     id = ids.geraId()
     # Inserir primeira árvore que possui Driver
@@ -284,6 +285,35 @@ def scrape_notas():
 
     # print(notas) # Adicionar em caso de testes
     return scrapeNotas(id)
+
+@app.route("/api/chatbot", methods=["POST"])
+def chat():
+    data = request.get_json()
+    print(data)  # Para depuração
+    user_message = data.get("text", "")
+    chat_id = data.get("chat_id", "default")  # ID enviado pelo frontend
+
+
+    print("\nID do usuário:", chat_id)
+    print("\nMensagem do usuário:", user_message)
+    # TODO: aqui entra a lógica da IA (usar JSON de matérias, manter contexto, etc.)
+    if "priorizar" in user_message.lower():
+        bot_response = "Para este semestre, foque em Álgebra e Física. No geral, mantenha revisão em Cálculo."
+    else:
+        bot_response = "Posso te sugerir técnicas de Pomodoro e revisão espaçada."
+
+        # Cria a entrada para log
+    resposta_chat = { 
+        "chat_id": chat_id, 
+        "text": bot_response, 
+        "remetente": 'bot', 
+        "timestamp": str(datetime.utcnow()) 
+    }
+    
+    # Adiciona ao log do chat
+    # append_chat_log(chat_id, log_entry)
+
+    return jsonify(resposta_chat)
 
 if __name__ == '__main__':
     app.run(debug=True)

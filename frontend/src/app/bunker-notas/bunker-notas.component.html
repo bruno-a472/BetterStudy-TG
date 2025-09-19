@@ -12,4 +12,9 @@
     <!-- <router-outlet [materias]="materiaList"></router-outlet> -->
     
     <router-outlet></router-outlet>
-</div>
+    <div class="painel-ia" *ngIf="visualizacao">
+        <div class="espaco-ia">
+            <div class="espaco-ia-titulo">Assistente de Estudos</div>
+            <app-chat></app-chat>
+        </div>
+    </div>

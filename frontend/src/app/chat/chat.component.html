@@ -1,0 +1,33 @@
+<div class="chat-container">
+  <!-- Área de mensagens -->
+  <div class="chat-mensagens">
+    <div *ngFor="let msg of mensagens" 
+         class="mensagem" 
+         [ngClass]="msg.remetente">
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <!-- Input do usuário -->
+  <div class="chat-input">
+    <input type="text"
+           [(ngModel)]="usuarioInput"
+           (keyup.enter)="enviarMensagem()"
+           placeholder="Digite sua mensagem..." />
+    <button (click)="enviarMensagem()">Enviar</button>
+  </div>
+</div>
+
+<!-- 
+<div class="chat-window">
+  <div *ngFor="let msg of mensagens" [ngClass]="msg.remetente">
+    <span>{{ msg.text }}</span>
+  </div>
+</div>
+
+<div class="chat-input">
+  <input [(ngModel)]="usuarioInput" placeholder="Digite sua mensagem..." />
+  <button (click)="enviarMensagem()">Enviar</button>
+</div>
+
+<br><br><br> -->

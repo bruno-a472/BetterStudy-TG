@@ -47,3 +47,23 @@
     font-size: 50px;
 }
 
+.painel-ia {
+    margin-top: 48px;
+    padding-inline: 100px;
+  
+    .espaco-ia {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .espaco-ia-titulo {
+      font-family: "Ubuntu", sans-serif;
+      font-weight: 600;
+      font-size: 48px;
+      margin-bottom: 32px;
+    }
+  
+    .espaco-ia-texto {
+      font-size: 18px;
+    }
+}
