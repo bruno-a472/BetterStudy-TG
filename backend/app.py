@@ -286,8 +286,39 @@ def scrape_notas():
     # print(notas) # Adicionar em caso de testes
     return scrapeNotas(id)
 
+@app.route("/api/init", methods=["POST"])
+def init():
+    # 1. Receber dados da requisição (mensagem do usuário)
+    ##Id
+    ##Texto
+    ##Data
+
+    # 2. Criar o arquivo de log do chat (JSON?)
+    # Criar um novo com uma lista vazia
+
+    # 3. "INITIALIZE CHATBOT" (aqui entra a lógica da IA)
+    
+    # 4. Ler notas do usuário (JSON)
+
+    # 5. Criar resposta do chatbot (aqui entra a lógica da IA)
+    return jsonify({"status": "Chatbot inicializado com sucesso!"})
+
 @app.route("/api/chatbot", methods=["POST"])
-def chat():
+def chatbot():
+    # 1. Receber dados da requisição (mensagem do usuário)
+    ##Id
+    ##Texto
+    ##Data
+
+    # 2. Ler o arquivo de log do chat (JSON?)
+
+    # 3. Adicionar a nova mensagem do usuário ao log
+    
+    # 4. Ler notas do usuário (JSON)
+
+    # 5. Criar resposta do chatbot (aqui entra a lógica da IA)
+
+    # Testes de mock
     data = request.get_json()
     print(data)  # Para depuração
     user_message = data.get("text", "")
