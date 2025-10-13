@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { EstudanteService } from '../estudante.service';
 import { ChatComponent } from "../chat/chat.component";
 
@@ -11,6 +11,7 @@ import { ChatComponent } from "../chat/chat.component";
 export class TestComponent {
   constructor(private estudanteService: EstudanteService) { }
 
+  @ViewChild(ChatComponent) chatComponent!: ChatComponent;
   visualizacao = false;
 
   ngOnInit(): void {
@@ -36,4 +37,9 @@ export class TestComponent {
     const idAtual = this.estudanteService.obtemId();
     console.log(`ID atual do estudante: ${idAtual}`);
   } // checaId()
+
+  limpaChat() {
+    this.chatComponent.limpaChat();
+  }
+
 }

@@ -60,4 +60,9 @@ export class ChatComponent {
     this.usuarioInput = '';
   }
 
+  limpaChat() {
+    localStorage.removeItem('chatMensagens');
+    this.mensagens = []; // limpa também em memória, se estiver armazenado no componente
+    console.log('🧹 Chat limpo com sucesso');
+  }
 }
