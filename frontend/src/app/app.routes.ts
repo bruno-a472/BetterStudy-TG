@@ -4,6 +4,8 @@ import { BunkerNotasComponent } from './bunker-notas/bunker-notas.component';
 import { HistoricoComponent } from './historico/historico.component';
 import { AtualComponent } from './atual/atual.component';
 import { SmsComponent } from './sms/sms.component';
+import { ChatComponent } from './chat/chat.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
 
@@ -11,6 +13,11 @@ export const routes: Routes = [
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'
+    },
+    {
+        path: 'chatbot',
+        component: TestComponent,
+        title: 'Oi Liéo'
     },
     {
         path: 'login',
@@ -39,6 +46,7 @@ export const routes: Routes = [
             }
         ]
     },
+    
     
     
 
