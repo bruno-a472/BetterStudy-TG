@@ -1,21 +1,39 @@
 <div class="chat-container">
-  <!-- Área de mensagens -->
-  <div class="chat-mensagens">
+
+  <div class="mensagens-area">
+
     <div *ngFor="let msg of mensagens" 
          class="mensagem" 
-         [ngClass]="msg.remetente">
-      {{ msg.text }}
+         [ngClass]="{'mensagem-usuario': msg.remetente === 'usuario', 'mensagem-bot': msg.remetente === 'bot'}">
+      
+      <p>{{ msg.text }}</p>
+
+      <span class="timestamp">{{ msg.timestamp | date:'shortTime' }}</span>
+    </div>
+
+    <div *ngIf="estaCarregando" class="mensagem mensagem-bot">
+      <div class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   </div>
 
-  <!-- Input do usuário -->
-  <div class="chat-input">
-    <input type="text"
-           [(ngModel)]="usuarioInput"
-           (keyup.enter)="enviarMensagem()"
-           placeholder="Digite sua mensagem..." />
-    <button (click)="enviarMensagem()">Enviar</button>
+  <div class="input-area">
+    <input 
+      type="text" 
+      class="chat-input" 
+      placeholder="Digite sua mensagem..." 
+      [(ngModel)]="usuarioInput"
+      (keyup.enter)="enviarMensagem()"
+      [disabled]="estaCarregando"> <button 
+      class="chat-botao" 
+      (click)="enviarMensagem()"
+      [disabled]="estaCarregando"> Enviar
+    </button>
   </div>
+
 </div>
 
 <!-- 

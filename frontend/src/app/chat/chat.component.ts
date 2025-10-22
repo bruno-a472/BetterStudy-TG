@@ -1,68 +1,121 @@
-import { Component } from '@angular/core';
-import { DadosService } from '../dados.service';
-import { Mensagem } from '../mensagem';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstudanteService } from '../estudante.service';
+import { Mensagem } from '../mensagem';
 
 @Component({
   selector: 'app-chat',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
   mensagens: Mensagem[] = [];
   usuarioInput: string = '';
+  estaCarregando = false;
 
-  constructor(private dadosService: DadosService,
-              private estudanteService: EstudanteService
-  ) { }
+  constructor(private estudanteService: EstudanteService) { }
 
   ngOnInit(): void {
     const mensagensSalvas = localStorage.getItem('chatMensagens');
 
-    const mensagens = mensagensSalvas ? JSON.parse(mensagensSalvas): null;
-    if (mensagens && mensagens.length > 0) {
-      this.mensagens = mensagens;
+    if (mensagensSalvas) {
+      this.mensagens = JSON.parse(mensagensSalvas).map((msg: any) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp)
+      }));
+    } else {
+      this.obterRelatorioInicial();
     }
   }
+
+obterRelatorioInicial() {
+  // 1. Ative o indicador AQUI, no início de tudo
+  this.estaCarregando = true;
+
+  this.estudanteService.obterNotasLocais().subscribe({
+    next: (notasDoAluno) => {
+      this.estudanteService.iniciarChat(notasDoAluno).subscribe({
+        next: (resposta) => {
+          const mensagemInicial: Mensagem = {
+            chat_id: this.estudanteService.obtemId(),
+            text: resposta.relatorio_inicial,
+            remetente: 'bot',
+            timestamp: new Date()
+          };
+          this.mensagens.push(mensagemInicial);
+          this.salvarChat();
+        },
+        error: (err) => {
+          console.error("Falha ao iniciar o chat com o backend", err);
+        },
+        complete: () => {
+          // 2. Desative o indicador DEPOIS que a resposta do backend chegar
+          this.estaCarregando = false;
+        }
+      });
+    },
+    error: (err) => {
+      console.error("Falha ao carregar o arquivo JSON local de notas", err);
+      // 3. Desative também em caso de erro ao carregar o arquivo local
+      this.estaCarregando = false;
+    }
+  });
+}
+
 
   enviarMensagem() {
     if (!this.usuarioInput.trim()) return;
 
-    const userMessage: Mensagem = { 
-      chat_id: this.estudanteService.obtemId(), 
-      text: this.usuarioInput, 
-      remetente: 'usuario', 
-      timestamp: new Date() 
+    const userMessage: Mensagem = {
+      chat_id: this.estudanteService.obtemId(),
+      text: this.usuarioInput,
+      remetente: 'usuario',
+      timestamp: new Date()
     };
-
     this.mensagens.push(userMessage);
-    localStorage.setItem('chatMensagens', JSON.stringify(this.mensagens)); // salva no browser
-
-    this.dadosService.enviarMensagem(userMessage).subscribe(response => {
-
-      const botMessage: Mensagem = { 
-        chat_id: this.estudanteService.obtemId(), 
-        text: response.text, 
-        remetente: 'bot', 
-        timestamp: new Date() 
-      };
-
-      console.log("Resposta do bot:", response.text);
-      this.mensagens.push(botMessage);
-      localStorage.setItem('chatMensagens', JSON.stringify(this.mensagens));
-      console.log("Mensagens atualizadas:", this.mensagens);
-    
-    });
-
+    const textoParaEnviar = this.usuarioInput;
     this.usuarioInput = '';
+    this.salvarChat();
+
+    this.estaCarregando = true; // Ativa o indicador
+
+    this.estudanteService.enviarMensagem(textoParaEnviar).subscribe({
+      next: (respostaDoBot) => {
+        const botMessage: Mensagem = {
+          ...respostaDoBot,
+          timestamp: new Date(respostaDoBot.timestamp)
+        };
+        this.mensagens.push(botMessage);
+        this.salvarChat();
+      },
+      error: (err) => {
+        console.error("Falha ao obter resposta do bot", err);
+        const erroMsg: Mensagem = {
+          chat_id: this.estudanteService.obtemId(),
+          text: "Desculpe, estou com dificuldades para responder. Por favor, tente novamente.",
+          remetente: 'bot',
+          timestamp: new Date()
+        };
+        this.mensagens.push(erroMsg);
+        this.salvarChat();
+      },
+      complete: () => {
+        this.estaCarregando = false; // Desativa o indicador ao completar (sucesso ou erro)
+      }
+    });
+  }
+
+  private salvarChat(): void {
+    localStorage.setItem('chatMensagens', JSON.stringify(this.mensagens));
   }
 
   limpaChat() {
     localStorage.removeItem('chatMensagens');
-    this.mensagens = []; // limpa também em memória, se estiver armazenado no componente
+    this.mensagens = [];
     console.log('🧹 Chat limpo com sucesso');
+    this.obterRelatorioInicial();
   }
 }

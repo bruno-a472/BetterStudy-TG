@@ -1,77 +1,167 @@
+/* Define uma variável de cor principal para facilitar a manutenção */
+$cor-principal: #0c75ff;
+
+/* Estilo do container principal do chat */
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 70vh;
+  height: 80vh; /* Aumentado um pouco para dar mais espaço */
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
-  background-color: #e2f3ff;
+  margin: 2rem auto; /* Adiciona margem no topo e na base */
+  background-color: #f0f4f8; /* Cor de fundo um pouco mais suave */
   border-radius: 16px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  font-family: "Ubuntu", sans-serif;
+}
 
-  .chat-mensagens {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
+/* Área onde as mensagens aparecem */
+.mensagens-area {
+  flex-grow: 1; /* Permite que a área cresça para preencher o espaço */
+  padding: 20px;
+  overflow-y: auto; /* Adiciona scroll quando as mensagens ultrapassam a altura */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espaço entre as bolhas de mensagem */
+
+  /* Estilo base para cada bolha de mensagem */
+  .mensagem {
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: column; /* Organiza texto e timestamp verticalmente */
 
-    .mensagem {
-      max-width: 70%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-family: "Ubuntu", sans-serif;
-      font-size: 16px;
-      line-height: 1.4;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    /* Estilo para o texto principal da mensagem */
+    p {
+      margin: 0;
+      padding: 0;
+      word-wrap: break-word; /* Garante que textos longos quebrem a linha */
+    }
 
-      &.usuario {
-        align-self: flex-end;
-        background-color: #0c75ff;
-        color: white;
-        border-bottom-right-radius: 4px;
-      }
-
-      &.chatbot {
-        align-self: flex-start;
-        background-color: white;
-        color: #333;
-        border-bottom-left-radius: 4px;
-      }
+    /* Estilo para o carimbo de data/hora */
+    .timestamp {
+      font-size: 0.75rem; /* Fonte menor */
+      color: #ffffff99; /* Branco com transparência para o usuário */
+      align-self: flex-end; /* Alinha no canto direito da bolha */
+      margin-top: 5px;
     }
   }
+
+  /* Estilo específico para a mensagem do usuário */
+  .mensagem-usuario {
+    align-self: flex-end; /* Alinha a bolha à direita */
+    background-color: $cor-principal;
+    color: white;
+    border-bottom-right-radius: 4px; /* Detalhe visual de "cauda" */
+  }
+
+  /* Estilo específico para a mensagem do bot */
+  .mensagem-bot {
+    align-self: flex-start; /* Alinha a bolha à esquerda */
+    background-color: white;
+    color: #333;
+    border-bottom-left-radius: 4px; /* Detalhe visual de "cauda" */
+
+    /* Altera a cor do timestamp para a bolha do bot */
+    .timestamp {
+      color: #999;
+    }
+  }
+}
+
+/* Área de input do usuário na base do chat */
+.input-area {
+  display: flex;
+  padding: 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #dde3ea;
+  gap: 10px;
 
   .chat-input {
-    display: flex;
-    padding: 12px;
-    background-color: #fff;
-    border-top: 1px solid #ccc;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Bordas mais arredondadas */
+    padding: 10px 15px;
+    font-size: 1rem;
 
-    input {
-      flex: 1;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 16px;
-      font-family: "Ubuntu", sans-serif;
+    &:focus {
+      outline: none;
+      border-color: $cor-principal;
+      box-shadow: 0 0 0 2px rgba($cor-principal, 0.2);
     }
 
-    button {
-      margin-left: 12px;
-      background-color: #0c75ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: #1b63ec;
-      }
+    &:disabled {
+      background-color: #f5f5f5;
     }
   }
+
+  .chat-botao {
+    background-color: $cor-principal;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Botão circular */
+    width: 44px;
+    height: 44px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: darken($cor-principal, 10%);
+    }
+
+    &:disabled {
+      background-color: #a0c7ff;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Animação dos 3 pontos de carregamento ("digitando...") */
+.loading-dots {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+  span {
+    height: 8px;
+    width: 8px;
+    margin: 0 2px;
+    background-color: #9db0c4;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
+
+  span:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+
+  span:nth-child(3) {
+    animation-delay: -0.32s;
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1.0);
+  }
+}
+
+/* Estilização da barra de rolagem (opcional, mas melhora a aparência) */
+.mensagens-area::-webkit-scrollbar {
+  width: 6px;
+}
+.mensagens-area::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 10px;
 }
