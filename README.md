@@ -37,6 +37,23 @@ Para rodar o frontend:
 ng serve
 ```
 
+Iniciar o docker:
+
+```bash
+docker compose -f docker-compose.dev.yml up      
+```
+
+Após o início, instalar o modelo do chat dentro do container:
+
+```bash
+docker exec -it betterstudy-tg-ollama-1 ollama pull gemma2:2b
+```
+
+Buildar para confirmar se está tudo correto:
+```bash
+docker compose -f docker-compose.dev.yml up  --build
+```
+
 Acesse o frontend em [http://localhost:4200](http://localhost:4200).
 
 ---
