@@ -39,3 +39,6 @@ Thumbs.db
 
 # --- Resultado notas ---
 resultado_notas_*.json
+
+backend/cache/*
+backend/debug/*

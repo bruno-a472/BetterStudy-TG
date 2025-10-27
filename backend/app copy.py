@@ -1,20 +1,25 @@
 # --- Imports ---
-import tempfile, os, uuid, time, json
+import tempfile, os, uuid
+import json
 import sys
 import time
 from datetime import datetime
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from utils.driver_seguro import executar_com_captura
 import pandas as pd
 
+
 # Módulos locais
-from utils.driver_seguro import criar_driver_seguro, capturar_estado_driver
 import arvoreDriver
 import gera_id
 import llm
@@ -59,43 +64,41 @@ def load_from_cache(user_id: str) -> dict | None:
         return None
 
 # --- Funções de Web Scraping (Selenium) ---
-def login(email: str, senha: str, id: int):
-    print('🕓 Aguardando 2s...')
+def login(e: str, s: str, id: int):
+    print('Aguardando 2s')
     time.sleep(2)
-
-    driver = arvore.encontra(id).obtemDriver()
+    print('Iniciando login...')
+    driver: webdriver.Chrome = arvore.encontra(id).obtemDriver()
     wait = WebDriverWait(driver, 20)
-
     try:
         botao = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "uc_flex-r")))
         botao.click()
-        print('✅ Botão clicado')
+        print('Botão clicado')
 
         campo_email = wait.until(EC.presence_of_element_located((By.NAME, "loginfmt")))
-        campo_email.send_keys(email)
+        campo_email.send_keys(e)
         campo_email.send_keys(Keys.ENTER)
 
         campo_senha = wait.until(EC.presence_of_element_located((By.NAME, "passwd")))
-        print('⌨️ Digitando senha...')
-        campo_senha.send_keys(senha)
-        print('Senha enviada')
+        print('Digitando senha...')
+        campo_senha.send_keys(s)
 
-        print('Clicando no entrar...')
-        time.sleep(2)
+        print('Senha digitada...')
         botao_entrar = wait.until(EC.element_to_be_clickable((By.ID, "idSIButton9")))
         botao_entrar.click()
-        print('🔒 Login submetido')
+        print('Senha confirmada')
 
         campo_texto = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "table-row")))
+        print('Prestes a clicar')
         campo_texto.click()
-        print('🟢 Autenticação em andamento...')
-
-        return json.dumps({'bool': True, 'id': id})
-
+        print("Aguardando autenticação por dois fatores...")
+        
+        resposta = {'bool': True, 'id': id}
+        return json.dumps(resposta, ensure_ascii=False, indent=4)
+        
     except Exception as e:
-        print('❌ Erro durante o login:', e)
-        capturar_estado_driver(driver, prefixo=f"erro_login_{id}")
-        return json.dumps({'bool': False, 'erro': str(e), 'id': id})
+        print("Erro durante o login:", str(e))
+        return json.dumps({'bool': False})
 
 def confirmacao(c: str, id: int):
     driver: webdriver.Chrome = arvore.encontra(id).obtemDriver()
@@ -116,7 +119,6 @@ def confirmacao(c: str, id: int):
 
     except Exception as e:
         print(f"Um problema foi encontrado na confirmação: {e}")
-        capturar_estado_driver(driver, prefixo=f"confirmacao_{id}")
         resposta = {'bool': False, 'erro': 'Falha na confirmação do código.'}
     
     return json.dumps(resposta, ensure_ascii=False, indent=4)
@@ -207,11 +209,6 @@ def scrapeNotas(id: int):
 
         return json.dumps(resultado, ensure_ascii=False, indent=4)
     
-    except Exception as e:
-        print(f"❌ Erro ao fazer scrape das notas: {e}")
-        capturar_estado_driver(driver, prefixo=f"scrape_notas_{id}")
-        return json.dumps({'bool': False, 'erro': "Falha ao extrair notas."})
-
     finally:
         print('Feito o scrape de notas, retornando')
         print(len(resultado['parciais']))
@@ -235,23 +232,27 @@ def rank_nota(nota_str: str) -> str:
 def receber_login():
     dados = request.json
     print('Dados recebidos para login:', dados)
+    e = dados['email']
+    s = dados['senha']
 
-    email = dados['email']
-    senha = dados['senha']
+    chrome_options = Options()
+    chrome_options.add_experimental_option('detach', True)
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    
+    # 🔑 Cria diretório temporário único para o Chrome
+    user_data_dir = tempfile.mkdtemp(prefix="chrome_profile_")
+    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
 
-    # cria novo driver isolado
-    driver, user_data_dir = criar_driver_seguro()
     id = ids.geraId()
-    print(f'\n🔑 Gerado ID {id}')
-
-    arvore.insere(id=id, driver=driver, user_data_dir=user_data_dir)
-    print('✅ Driver inserido na árvore')
-
-    driver.get('https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx')
-    print('Página carregada')
-
-    # chama função que faz o login com o driver certo
-    return login(email, senha, id)
+    print('\ngerado id')
+    arvore.insere(id=id, driver=webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options))
+    print('\nInserido nó')
+    arvore.encontra(id).obtemDriver().get('https://siga.cps.sp.gov.br/sigaaluno/applogin.aspx')
+    print('\nPágina carregada')
+    return login(e, s, id)
 
 @app.route('/api/login/confirmacao', methods=['POST'])
 def confirmacao_login():

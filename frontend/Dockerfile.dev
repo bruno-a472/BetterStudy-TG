@@ -1,0 +1,18 @@
+# Etapa única - Ambiente de desenvolvimento Angular
+FROM node:20
+
+WORKDIR /app
+
+# Copia apenas package.json para aproveitar cache
+COPY package*.json ./
+
+RUN npm install
+
+# Copia o restante do projeto
+COPY . .
+
+# Expõe a porta padrão do Angular
+EXPOSE 4200
+
+# Executa o servidor de desenvolvimento com hot reload
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--port", "4200"]
