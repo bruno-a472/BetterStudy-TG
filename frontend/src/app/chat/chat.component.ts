@@ -15,54 +15,46 @@ export class ChatComponent implements OnInit {
   mensagens: Mensagem[] = [];
   usuarioInput: string = '';
   estaCarregando = false;
-
-  constructor(private estudanteService: EstudanteService) { }
+  
+  constructor(private estudanteService: EstudanteService) {}
 
   ngOnInit(): void {
-    const mensagensSalvas = localStorage.getItem('chatMensagens');
-
-    if (mensagensSalvas) {
-      this.mensagens = JSON.parse(mensagensSalvas).map((msg: any) => ({
-        ...msg,
-        timestamp: new Date(msg.timestamp)
-      }));
-    } else {
-      this.obterRelatorioInicial();
-    }
   }
 
-obterRelatorioInicial() {
+obterRelatorioInicial(id: number) {
   // 1. Ative o indicador AQUI, no início de tudo
   this.estaCarregando = true;
 
-  this.estudanteService.obterNotasLocais().subscribe({
-    next: (notasDoAluno) => {
-      this.estudanteService.iniciarChat(notasDoAluno).subscribe({
-        next: (resposta) => {
-          const mensagemInicial: Mensagem = {
-            chat_id: this.estudanteService.obtemId(),
-            text: resposta.relatorio_inicial,
-            remetente: 'bot',
-            timestamp: new Date()
-          };
-          this.mensagens.push(mensagemInicial);
-          this.salvarChat();
-        },
-        error: (err) => {
-          console.error("Falha ao iniciar o chat com o backend", err);
-        },
-        complete: () => {
-          // 2. Desative o indicador DEPOIS que a resposta do backend chegar
-          this.estaCarregando = false;
-        }
-      });
+    this.estudanteService.iniciarChat(id).subscribe({
+    next: (resposta) => {
+      const mensagemInicial: Mensagem = {
+        chat_id: this.estudanteService.obtemId(),
+        text: resposta.relatorio_inicial,
+        remetente: 'bot',
+        timestamp: new Date()
+      };
+      this.mensagens.push(mensagemInicial);
+      this.salvarChat();
     },
     error: (err) => {
-      console.error("Falha ao carregar o arquivo JSON local de notas", err);
-      // 3. Desative também em caso de erro ao carregar o arquivo local
+      console.error("Falha ao iniciar o chat com o backend", err);
+    },
+    complete: () => {
+      // 2. Desative o indicador DEPOIS que a resposta do backend chegar
       this.estaCarregando = false;
     }
   });
+
+  // this.estudanteService.obterNotasLocais().subscribe({
+  //   next: (notasDoAluno) => {
+
+  //   },
+  //   error: (err) => {
+  //     console.error("Falha ao carregar o arquivo JSON local de notas", err);
+  //     // 3. Desative também em caso de erro ao carregar o arquivo local
+  //     this.estaCarregando = false;
+  //   }
+  // });
 }
 
 
@@ -116,6 +108,5 @@ obterRelatorioInicial() {
     localStorage.removeItem('chatMensagens');
     this.mensagens = [];
     console.log('🧹 Chat limpo com sucesso');
-    this.obterRelatorioInicial();
   }
 }

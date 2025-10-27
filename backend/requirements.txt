@@ -3,3 +3,4 @@ Flask-Cors==5.0.0
 selenium==4.26.1
 webdriver-manager==4.0.2
 gunicorn
+pandas

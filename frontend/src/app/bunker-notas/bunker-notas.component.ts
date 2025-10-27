@@ -1,10 +1,11 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { DadosService } from '../dados.service';
 import { EstudanteService } from '../estudante.service';
 import { MateriaService } from '../materia.service';
 import { ChatComponent } from '../chat/chat.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-bunker-notas',
@@ -23,8 +24,13 @@ export class BunkerNotasComponent {
     this.nome = this.route.snapshot.params['nome'] 
   }
 
+  @ViewChild(ChatComponent) chatComponent!: ChatComponent;
+
   visualizacao = false;
-  ngOnInit(): void {
+  async ngOnInit() {
+    setTimeout(() => {
+      this.visualizacao = true;
+    }, 100);
     // Primeiro tenta carregar do localStorage
     const historicasLS = localStorage.getItem('materiasHistoricas');
     const parciaisLS = localStorage.getItem('materiasParciais');
@@ -42,47 +48,70 @@ export class BunkerNotasComponent {
       this.materiaService.switchNotasCarregando();
     } else {
       // Se não tem nada no localStorage, busca no backend
-      this.pegarNotas();
+      await this.pegarNotas();
     }
 
-    setTimeout(() => {
-      this.visualizacao = true;
-    }, 100);
-  }
+    this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
 
-  // ngOnInit(): void {
-  //   this.pegarNotas();
-  //   setTimeout(() => {
-  //     this.visualizacao = true;
-  //   }, 100);
-
-  // } // ngOnInit()
+    
+        // if (mensagensSalvas) {
+        //   this.chatComponent.mensagens = JSON.parse(mensagensSalvas).map((msg: any) => ({
+        //     ...msg,
+        //     timestamp: new Date(msg.timestamp)
+        //   }));
+        // } else {
+        //   const materiasHistoricas = localStorage.getItem('materiasHistoricas');
+        //   const materiasParciais = localStorage.getItem('materiasParciais');
+    
+        //   if (materiasHistoricas && materiasParciais) {
+            
+        //   } else {
+        //     console.warn("Nenhum dado de notas encontrado. O chat não pode ser iniciado.");
+        //   }
+        
+   }
 
   atualizaId() {
     this.estudanteService.defineId(3); // Teste
   }
 
-  pegarNotas() {
+  async pegarNotas(): Promise<void> {
     const id = {id: this.estudanteService.obtemId()} // Obtendo ID do estudante registrado no backend
     
-    // Início da requisição HTTP
-    this.dadosService.receberNotas(id).subscribe(resposta => {
-      if (resposta['bool'] == false) { // Arrumar esse teste para caso haja return Vazio das notas
-        console.log('Falhou')
-      } // if
-      else {
-        this.materiaService.atualizaMateriasHistoricas(resposta['historicas'])
-        this.materiaService.atualizaMateriasParciais(resposta['parciais'])
-        this.materiaService.switchNotasCarregando(); // Service avisa que notas carregaram, trocando variável pra false
-      
-        localStorage.setItem('materiasHistoricas', JSON.stringify(resposta['historicas']));
-        localStorage.setItem('materiasParciais', JSON.stringify(resposta['parciais']));
+    try {
+      // Início da requisição HTTP
+      const resposta = await firstValueFrom(this.dadosService.receberNotas(id))
+      if (!resposta || resposta['bool'] === false) {
+        console.log('Falhou ao obter notas do backend');
+        return;
+      }
 
-      } // else
-    },
-    erro => {
+      this.materiaService.atualizaMateriasHistoricas(resposta['historicas'])
+      this.materiaService.atualizaMateriasParciais(resposta['parciais'])
+      this.materiaService.switchNotasCarregando(); // Service avisa que notas carregaram, trocando variável pra false
+    
+      localStorage.setItem('materiasHistoricas', JSON.stringify(resposta['historicas']));
+      localStorage.setItem('materiasParciais', JSON.stringify(resposta['parciais']));
+    } catch(erro) { 
       console.error('Erro ao enviar dados:', erro);
-    } // erro
-  );} // pegarNotas()
+    } // catch
+  ;} // pegarNotas()
+
+  limparCacheNotas(): void {
+    // Remover do localStorage
+    localStorage.removeItem('materiasHistoricas');
+    localStorage.removeItem('materiasParciais');
+
+    // Resetar no service (caso os dados já estejam em memória)
+    this.materiaService.atualizaMateriasHistoricas([]);
+    this.materiaService.atualizaMateriasParciais([]);
+    this.materiaService.switchNotasCarregando(); // Reativa o estado "carregando"
+
+    console.log('🧹 Cache de notas limpo com sucesso!');
+  } // limparCacheNotas
+
+  testarChat(): void {
+    this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+  }
   
 }

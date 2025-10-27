@@ -2,18 +2,13 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5000:10000"
     env_file:
       - .env
     environment:
-      - FLASK_APP=app.py
-      - FLASK_ENV=development
-      - FLASK_DEBUG=1
       - OLLAMA_URL=http://ollama:11434/api/generate
-    volumes:
-      - ./backend:/app
     depends_on:
       - ollama
 

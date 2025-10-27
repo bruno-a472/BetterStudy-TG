@@ -16,7 +16,7 @@ load_dotenv()
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 MODEL_NAME = os.getenv("MODEL_NAME", "gemma2:2b") 
-REQUEST_TIMEOUT = 300
+REQUEST_TIMEOUT = 600
 
 # --- Funções Auxiliares ---
 

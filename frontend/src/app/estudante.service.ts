@@ -31,10 +31,10 @@ export class EstudanteService {
     return this.http.get<any>('assets/resultado_notas_12.json');
   }
 
-  iniciarChat(notas: any): Observable<{ relatorio_inicial: string }> {
+  iniciarChat(id:number): Observable<{ relatorio_inicial: string }> {
+    console.log('Iniciando chat para o ID:', id);
     const body = {
-      id_usuario: this.id, // Usa o ID armazenado no serviço
-      notas: notas
+      id_usuario: id, // Usa o ID armazenado no serviço
     };
     return this.http.post<{ relatorio_inicial: string }>(`${this.apiUrl}/init`, body);
   }

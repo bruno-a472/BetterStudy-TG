@@ -40,6 +40,7 @@ export class TestComponent {
 
   limpaChat() {
     this.chatComponent.limpaChat();
+    this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
   }
 
 }
