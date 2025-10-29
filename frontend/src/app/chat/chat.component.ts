@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstudanteService } from '../estudante.service';
 import { Mensagem } from '../mensagem';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MarkdownComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })

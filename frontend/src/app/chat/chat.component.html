@@ -3,10 +3,14 @@
   <div class="mensagens-area">
 
     <div *ngFor="let msg of mensagens" 
-         class="mensagem" 
-         [ngClass]="{'mensagem-usuario': msg.remetente === 'usuario', 'mensagem-bot': msg.remetente === 'bot'}">
-      
-      <p>{{ msg.text }}</p>
+      class="mensagem" 
+      [ngClass]="{'mensagem-usuario': msg.remetente === 'usuario', 'mensagem-bot': msg.remetente === 'bot'}">
+    
+
+      <markdown *ngIf="msg.remetente === 'bot'; else usuarioTpl" [data]="msg.text"></markdown>
+      <ng-template #usuarioTpl>
+          <p>{{ msg.text }}</p>
+      </ng-template>
 
       <span class="timestamp">{{ msg.timestamp | date:'shortTime' }}</span>
     </div>

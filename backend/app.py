@@ -268,11 +268,10 @@ def api_scrape_notas():
 
 @app.route('/api/init', methods=['POST'])
 def init_user_session():
-    """Inicializa sessão do usuário e gera relatório inicial completo."""
     data = request.get_json()
     user_id = data.get("id_usuario")
+    perfil = data.get("perfil")  # opcional, ex.: quiz inicial
 
-    # Validação
     if not user_id:
         return jsonify({"erro": "É necessário fornecer 'id_usuario'."}), 400
 
@@ -280,111 +279,81 @@ def init_user_session():
     if not notas:
         return jsonify({"erro": f"Nenhum dado encontrado para o usuário de ID {user_id}."}), 404
 
-    # Passar o JSON completo (com separação de históricas e parciais)
-    # A função gerar_relatorio_inicial_ollama já faz a separação internamente
     disciplinas_historicas = notas.get('historicas', [])
-    disciplinas_parciais = notas.get('parciais', [])
-    
-    # Validar se há dados
+    disciplinas_parciais  = notas.get('parciais', [])
     if not disciplinas_historicas and not disciplinas_parciais:
         return jsonify({"relatorio_inicial": "Nenhuma disciplina foi fornecida para análise."}), 200
-    
-    # Combinar TODAS as disciplinas em uma lista única
-    # A função LLM vai separar internamente pelo campo 'tipo'
-    todas_disciplinas = disciplinas_historicas + disciplinas_parciais
-    
+
+    todas = disciplinas_historicas + disciplinas_parciais
+
     try:
-        # Gerar relatório inicial (análise de padrões + estado atual)
-        relatorio = llm.gerar_relatorio_inicial_ollama(todas_disciplinas)
-        
-        if not relatorio or relatorio.strip() == "":
+        relatorio = llm.gerar_relatorio_inicial_ollama(todas, perfil=perfil)
+        if not relatorio.strip():
             relatorio = "Desculpe, não foi possível gerar o relatório inicial. Tente novamente."
-            
     except Exception as e:
         print(f"[ERRO] Falha ao gerar relatório inicial: {e}", file=sys.stderr)
         relatorio = "Erro ao processar seus dados. Por favor, tente novamente mais tarde."
-    
+
     return jsonify({
         "relatorio_inicial": relatorio,
         "user_id": int(user_id),
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }), 200
 
+
 @app.route("/api/chatbot", methods=["POST"])
 def chat():
-    """Endpoint para conversas com o chatbot (apenas respostas pontuais)."""
     data = request.get_json()
     user_id = data.get("chat_id")
     user_message = data.get("text", "")
+    perfil = data.get("perfil")  # opcional
 
-    # Validação
     if not user_id or not user_message:
         return jsonify({"erro": "É necessário fornecer 'chat_id' e 'text'."}), 400
 
-    # Carregar dados do cache
     dados_em_cache = load_from_cache(str(user_id))
-    
-    # Se não houver cache, criar dados de teste
     if not dados_em_cache:
-        print(f"\n⚠️ Cache não encontrado para user_id={user_id}")
-        print("🧪 Carregando dados de teste...")
-        
-        json_path = os.path.join(BASE_DIR, f"resultado_notas_{user_id}.json")
+        return jsonify({
+            "chat_id": int(user_id),
+            "text": "Seus dados não foram encontrados. Por favor, faça login novamente.",
+            "remetente": 'bot'
+        }), 200
 
-        json_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'src', 'assets', f'resultado_notas_{user_id}.json')
-        
-        try:
-            with open(json_path, 'r', encoding='utf-8') as f:
-                dados_em_cache = json.load(f)
-            save_to_cache(str(user_id), dados_em_cache)
-            print(f"✅ Cache criado para user_id={user_id}")
-        except FileNotFoundError:
-            print("❌ JSON de teste não encontrado")
-            return jsonify({
-                "chat_id": int(user_id),
-                "text": "Erro: Seus dados não foram encontrados. Por favor, faça login novamente.",
-                "remetente": 'bot'
-            }), 200
-
-    # Formatar contexto separado (histórico + atual)
     disciplinas_historicas = dados_em_cache.get('historicas', [])
-    disciplinas_atuais = dados_em_cache.get('parciais', [])
-    
+    disciplinas_atuais     = dados_em_cache.get('parciais', [])
+
     historico_formatado = "\n".join([
-        f"- {d.get('nome', 'N/A')}: Nota {d.get('nota', 'N/A')} (Conceito {d.get('abc', 'N/A')}) - {d.get('status', 'N/A')}"
+        f"- {d.get('nome','N/A')}: Nota {d.get('nota','N/A')} (Conceito {d.get('abc','N/A')}) — {d.get('status','N/A')}"
         for d in disciplinas_historicas if d.get('nome')
-    ])
-    
+    ]) or "(sem histórico)"
+
     atuais_formatado = "\n".join([
-        f"- {d.get('nome', 'N/A')}: Nota Parcial {d.get('nota', 'N/A')} (Conceito {d.get('abc', 'N/A')}) - {d.get('status', 'N/A')}"
+        f"- {d.get('nome','N/A')}: Nota Parcial {d.get('nota','N/A')} (Conceito {d.get('abc','N/A')}) — {d.get('status','N/A')}"
         for d in disciplinas_atuais if d.get('nome')
-    ])
-    
-    contexto_completo = f"""
-HISTÓRICO COMPLETO:
-{historico_formatado if historico_formatado else 'Nenhuma disciplina histórica registrada'}
+    ]) or "(sem atuais)"
+
+    contexto_completo = f"""HISTÓRICO COMPLETO:
+{historico_formatado}
 
 DISCIPLINAS ATUAIS:
-{atuais_formatado if atuais_formatado else 'Nenhuma disciplina em curso'}
+{atuais_formatado}
 """
 
-    # Gerar resposta pontual
     try:
-        bot_response = llm.gerar_resposta_chat_ollama(user_message, contexto_completo)
-        
-        if not bot_response or bot_response.strip() == "":
+        bot_response = llm.gerar_resposta_chat_ollama(user_message, contexto_completo, perfil=perfil)
+        if not bot_response.strip():
             bot_response = "Desculpe, tive dificuldade em processar sua pergunta. Pode reformular?"
-            
     except Exception as e:
         print(f"[ERRO] Falha ao gerar resposta do chatbot: {e}", file=sys.stderr)
         bot_response = "Desculpe, estou com problemas técnicos no momento. Tente novamente em alguns instantes."
-
+    print('\n\nTeste')
     return jsonify({
         "chat_id": int(user_id),
         "text": bot_response,
         "remetente": 'bot',
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }), 200
+
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
