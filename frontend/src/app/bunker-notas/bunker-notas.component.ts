@@ -24,13 +24,30 @@ export class BunkerNotasComponent {
     this.nome = this.route.snapshot.params['nome'] 
   }
 
-  @ViewChild(ChatComponent) chatComponent!: ChatComponent;
+  @ViewChild(ChatComponent, { static: true }) chatComponent!: ChatComponent;
 
   visualizacao = false;
   async ngOnInit() {
     setTimeout(() => {
       this.visualizacao = true;
     }, 100);
+    console.log("BunkerNotasComponent ngOnInit - ID do estudante:", this.estudanteService.obtemId());
+    if (this.estudanteService.checarAmbienteTeste() === 1) {
+      console.log('⚠️ Modo de teste ativado: carregando notas locais.');
+      this.dadosService.obterNotasLocais().subscribe(resposta => {
+        console.log('✅ Dados de notas locais carregados com sucesso:', resposta);
+        this.materiaService.atualizaMateriasHistoricas(resposta['historicas'])
+        this.materiaService.atualizaMateriasParciais(resposta['parciais'])
+        this.materiaService.switchNotasCarregando(); // Service avisa que notas carregaram, trocando variável pra false
+        localStorage.setItem('materiasHistoricas', JSON.stringify(resposta['historicas']));
+        localStorage.setItem('materiasParciais', JSON.stringify(resposta['parciais']));
+        this.estudanteService.switchAmbienteTeste();
+        console.log('⚠️ Modo de teste desativado após carregar notas locais.');
+      });
+        console.log("Ambiente de teste obtendo relatório inicial");
+        this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+      return;
+    }
     // Primeiro tenta carregar do localStorage
     const historicasLS = localStorage.getItem('materiasHistoricas');
     const parciaisLS = localStorage.getItem('materiasParciais');
@@ -50,26 +67,10 @@ export class BunkerNotasComponent {
       // Se não tem nada no localStorage, busca no backend
       await this.pegarNotas();
     }
-
-    this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
-
-    
-        // if (mensagensSalvas) {
-        //   this.chatComponent.mensagens = JSON.parse(mensagensSalvas).map((msg: any) => ({
-        //     ...msg,
-        //     timestamp: new Date(msg.timestamp)
-        //   }));
-        // } else {
-        //   const materiasHistoricas = localStorage.getItem('materiasHistoricas');
-        //   const materiasParciais = localStorage.getItem('materiasParciais');
-    
-        //   if (materiasHistoricas && materiasParciais) {
-            
-        //   } else {
-        //     console.warn("Nenhum dado de notas encontrado. O chat não pode ser iniciado.");
-        //   }
-        
-   }
+    console.log("Normalmente obtendo relatório inicial");
+      console.log(this.estudanteService.obtemId());
+      this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+  }
 
   atualizaId() {
     this.estudanteService.defineId(3); // Teste
@@ -111,7 +112,6 @@ export class BunkerNotasComponent {
   } // limparCacheNotas
 
   testarChat(): void {
-    this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+    this.estudanteService.solicitarRelatorioInicial(this.estudanteService.obtemId());
   }
-  
 }

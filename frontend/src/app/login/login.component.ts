@@ -14,7 +14,7 @@ import { EstudanteService } from '../estudante.service';
 export class LoginComponent {
   constructor(private router: Router,
               private dadosService: DadosService,
-              private estudante: EstudanteService) {}
+              private estudanteService: EstudanteService) {}
   visualizacao = false;
 
   id = 0 // Inicializando ID
@@ -39,7 +39,7 @@ export class LoginComponent {
         } // if
         else {
           this.router.navigate([`/login/confirmacao`]);
-          this.estudante.defineId(resposta['id']);
+          this.estudanteService.defineId(resposta['id']);
         } // else
         
       }, // resposta =>
@@ -51,4 +51,10 @@ export class LoginComponent {
     console.log('/login/confirmacao')
   } // iniciarLogin() -- teste
 
+  pularScrape() {
+    this.estudanteService.defineId(11);
+    console.log("ID definido para teste:", this.estudanteService.obtemId());
+    this.estudanteService.switchAmbienteTeste();
+    this.router.navigate([`/Bruno/atual`]);
+  } // pularScrape()
 }

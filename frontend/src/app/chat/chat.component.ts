@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EstudanteService } from '../estudante.service';
 import { Mensagem } from '../mensagem';
 import { MarkdownComponent } from 'ngx-markdown';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -17,12 +18,17 @@ export class ChatComponent implements OnInit {
   usuarioInput: string = '';
   estaCarregando = false;
   
-  constructor(private estudanteService: EstudanteService) {}
+  private sub?: Subscription;
 
-  ngOnInit(): void {
+  constructor(private estudanteService: EstudanteService) {}
+  ngOnInit() {
+    this.sub = this.estudanteService.initRelatorio$.subscribe(userId => {
+      this.obterRelatorioInicial(userId);
+    });
   }
 
-obterRelatorioInicial(id: number) {
+  obterRelatorioInicial(id: number) {
+  console.log('teste, obterRelatorioInicial');
   // 1. Ative o indicador AQUI, no início de tudo
   this.estaCarregando = true;
 

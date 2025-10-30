@@ -66,6 +66,17 @@ $cor-principal: #0c75ff;
     color: #333;
     border-bottom-left-radius: 4px; /* Detalhe visual de "cauda" */
 
+    /* Para markdown */
+    h1, h2, h3 { margin: 8px 0 6px; font-family: "Ubuntu", sans-serif; }
+    p { margin: 6px 0; }
+    ul, ol { margin: 6px 0 6px 18px; }
+    li { margin: 2px 0; }
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+    code { background: #f0f2f5; padding: 2px 6px; border-radius: 6px; }
+    pre code { display: block; padding: 12px; border-radius: 8px; }
+    hr { border: none; border-top: 1px solid #eaeaea; margin: 10px 0; }
+
     /* Altera a cor do timestamp para a bolha do bot */
     .timestamp {
       color: #999;

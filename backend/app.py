@@ -266,6 +266,23 @@ def api_scrape_notas():
     id = dados['id']
     return scrapeNotas(id)
 
+@app.route('/api/notas/teste', methods=['POST'])
+def api_notas_teste():
+    """Endpoint para fornecer dados de notas de teste a partir de um arquivo local."""
+    dados = request.json
+    id = dados['id']
+    json_path = f"resultado_notas_{id}.json"
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            dados_teste = json.load(f)
+        save_to_cache(id, dados_teste)
+        return jsonify(dados_teste), 200
+    except FileNotFoundError:
+        return jsonify({"erro": "Arquivo de teste não encontrado."}), 404
+    except Exception as e:
+        print(f"[ERRO] Falha ao carregar dados de teste: {e}", file=sys.stderr)
+        return jsonify({"erro": "Erro ao carregar dados de teste."}), 500
+
 @app.route('/api/init', methods=['POST'])
 def init_user_session():
     data = request.get_json()

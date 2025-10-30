@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { Mensagem } from './mensagem';
 
@@ -9,8 +9,16 @@ import { Mensagem } from './mensagem';
 })
 export class EstudanteService {
   private id = 0;
+  private ambienteTeste = 0; // 0 = fluxo normal, 1 = fluxo de teste com dados locais
   // 3. Defina a URL base do seu backend para facilitar a manutenção
   private apiUrl = 'http://localhost:5000/api';
+
+  private _initRelatorio$ = new Subject<number>();
+  initRelatorio$ = this._initRelatorio$.asObservable();
+
+  solicitarRelatorioInicial(userId: number) {
+    this._initRelatorio$.next(userId);
+  }
 
   constructor(private http: HttpClient) { }
 
@@ -50,5 +58,17 @@ export class EstudanteService {
       text: texto
     };
     return this.http.post<Mensagem>(`${this.apiUrl}/chatbot`, body);
+  }
+
+  switchAmbienteTeste(): void {
+    if (this.ambienteTeste === 0) {
+      this.ambienteTeste = 1;
+    } else {
+      this.ambienteTeste = 0;
+    }
+  }
+
+  checarAmbienteTeste(): number {
+    return this.ambienteTeste;
   }
 }

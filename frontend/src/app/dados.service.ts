@@ -9,6 +9,7 @@ export class DadosService {
   private apiUrlLogin = 'http://localhost:5000/api/login'; // URL login
   private apiUrlConfirmacao = 'http://localhost:5000/api/login/confirmacao'; // URL confirmação
   private apiUrlNotas = 'http://localhost:5000/api/notas'; // URL notas
+  private apiUrlNotasTeste = 'http://localhost:5000/api/notas/teste'; // URL notas
   private apiUrlChatbot = 'http://localhost:5000/api/chatbot'; // URL notas
 
   constructor(private http: HttpClient) { }
@@ -23,6 +24,10 @@ export class DadosService {
   
   receberNotas(dados: any): Observable<any> {
     return this.http.post<any>(this.apiUrlNotas, dados);
+  }
+
+  obterNotasLocais(): Observable<any> {
+    return this.http.post<any>(this.apiUrlNotasTeste, {"id": 11});
   }
   
   enviarMensagem(dados: any): Observable<any> {
