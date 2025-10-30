@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 import { Mensagem } from './mensagem';
+import { PerfilEstudante } from './estudante-perfil/estudante-perfil.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,14 @@ export class EstudanteService {
   private ambienteTeste = 0; // 0 = fluxo normal, 1 = fluxo de teste com dados locais
   // 3. Defina a URL base do seu backend para facilitar a manutenção
   private apiUrl = 'http://localhost:5000/api';
+  private nome_aluno = '';
 
-  private _initRelatorio$ = new Subject<number>();
+  private _initRelatorio$ = new Subject<{ userId: number; perfil: PerfilEstudante }>();
   initRelatorio$ = this._initRelatorio$.asObservable();
 
-  solicitarRelatorioInicial(userId: number) {
-    this._initRelatorio$.next(userId);
+  solicitarRelatorioInicial(userId: number, perfil: PerfilEstudante) {
+    console.log(`Solicitando relatório inicial para o ID: ${userId}`);
+    this._initRelatorio$.next({userId, perfil});
   }
 
   constructor(private http: HttpClient) { }
@@ -39,10 +42,11 @@ export class EstudanteService {
     return this.http.get<any>('assets/resultado_notas_12.json');
   }
 
-  iniciarChat(id:number): Observable<{ relatorio_inicial: string }> {
+  iniciarChat(id: number, perfil: PerfilEstudante): Observable<{ relatorio_inicial: string }> {
     console.log('Iniciando chat para o ID:', id);
     const body = {
       id_usuario: id, // Usa o ID armazenado no serviço
+      perfil: perfil
     };
     return this.http.post<{ relatorio_inicial: string }>(`${this.apiUrl}/init`, body);
   }
@@ -52,12 +56,21 @@ export class EstudanteService {
    * @param texto A mensagem que o usuário digitou.
    * @returns Um Observable contendo a resposta do bot no formato da interface Mensagem.
    */
-  enviarMensagem(texto: string): Observable<Mensagem> {
+  enviarMensagem(texto: string, perfil: PerfilEstudante): Observable<Mensagem> {
     const body = {
       chat_id: this.id, // Usa o ID armazenado no serviço
-      text: texto
+      text: texto,
+      perfil: perfil
     };
     return this.http.post<Mensagem>(`${this.apiUrl}/chatbot`, body);
+  }
+
+  defineNome(nome: string): void {
+    this.nome_aluno = nome;
+  }
+
+  obtemNome(): string {
+    return this.nome_aluno;
   }
 
   switchAmbienteTeste(): void {

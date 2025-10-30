@@ -101,11 +101,15 @@ def _chunk_data(disciplinas: List[Dict[str, Any]], perfil: Dict[str, Any] | None
         horas = perfil.get("horas_estudo_dia", "não informado")
         tipo  = perfil.get("tipo_aprendiz", "não informado")
         fam   = perfil.get("familiaridade_metodos", {})
+        foc   = fam.get("nivel_foco", "não informado")
+        mot   = perfil.get("motivacao_estudo", "não informado")
         perfil_txt = (
             "Perfil do aluno:\n"
             f"- Horas de estudo/dia: {horas}\n"
             f"- Tipo de aprendiz: {tipo}\n"
             f"- Familiaridade com métodos: {fam}\n"
+            f"- Nível de foco/concentração: {foc}\n"
+            f"- Motivação para estudar: {mot}\n"
         )
 
     return f"### DADOS DO ALUNO\n{parte_hist}\n{parte_atu}\n{perfil_txt}".strip()
@@ -152,9 +156,9 @@ aponte tendências e riscos atuais, e gere um plano prático personalizando téc
     ])
     return prompt
 
-def _build_prompt_chat(pergunta_usuario: str, disciplinas_fmt: str | None, perfil: Dict[str, Any] | None = None) -> str:
+def _build_prompt_chat(pergunta_usuario: str, disciplinas_fmt: str | None, perfil: str | None = None) -> str:
     # disciplinas_fmt é opcional; se vier preformatado do endpoint, usa; senão, pode pular
-    data = f"### DADOS DO ALUNO (texto)\n{disciplinas_fmt}\n" if disciplinas_fmt else ""
+    data = f"### DADOS DO ALUNO (texto)\n{disciplinas_fmt}\n{perfil}" if disciplinas_fmt else ""
     task = f"""
 ### TAREFA
 Responda à pergunta do aluno de forma prática e direta, integrando a AA e, quando fizer sentido,

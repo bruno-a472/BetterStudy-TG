@@ -5,6 +5,7 @@ import { EstudanteService } from '../estudante.service';
 import { Mensagem } from '../mensagem';
 import { MarkdownComponent } from 'ngx-markdown';
 import { Subscription } from 'rxjs';
+import { PerfilEstudante } from '../estudante-perfil/estudante-perfil.component';
 
 @Component({
   selector: 'app-chat',
@@ -22,17 +23,18 @@ export class ChatComponent implements OnInit {
 
   constructor(private estudanteService: EstudanteService) {}
   ngOnInit() {
-    this.sub = this.estudanteService.initRelatorio$.subscribe(userId => {
-      this.obterRelatorioInicial(userId);
+    this.sub = this.estudanteService.initRelatorio$.subscribe(({userId, perfil}) => {
+      console.log("ChatComponent recebeu solicitação de relatório inicial");
+      this.obterRelatorioInicial(userId, perfil);
     });
   }
 
-  obterRelatorioInicial(id: number) {
+  obterRelatorioInicial(id: number, perfil: PerfilEstudante) {
   console.log('teste, obterRelatorioInicial');
   // 1. Ative o indicador AQUI, no início de tudo
   this.estaCarregando = true;
 
-    this.estudanteService.iniciarChat(id).subscribe({
+    this.estudanteService.iniciarChat(id, perfil).subscribe({
     next: (resposta) => {
       const mensagemInicial: Mensagem = {
         chat_id: this.estudanteService.obtemId(),
@@ -68,6 +70,9 @@ export class ChatComponent implements OnInit {
   enviarMensagem() {
     if (!this.usuarioInput.trim()) return;
 
+    const perfilLS = localStorage.getItem('perfil_estudante_v1');
+    const perfil = perfilLS ? JSON.parse(perfilLS) : null;
+
     const userMessage: Mensagem = {
       chat_id: this.estudanteService.obtemId(),
       text: this.usuarioInput,
@@ -81,7 +86,7 @@ export class ChatComponent implements OnInit {
 
     this.estaCarregando = true; // Ativa o indicador
 
-    this.estudanteService.enviarMensagem(textoParaEnviar).subscribe({
+    this.estudanteService.enviarMensagem(textoParaEnviar, perfil).subscribe({
       next: (respostaDoBot) => {
         const botMessage: Mensagem = {
           ...respostaDoBot,

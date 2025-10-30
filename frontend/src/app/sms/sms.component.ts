@@ -38,7 +38,8 @@ export class SmsComponent {
         // Confirmação falhou
       } // if
       else {
-        this.router.navigate([`/${resposta['nome']}/atual`]);
+        this.estudante.defineNome(resposta['nome']);
+        this.router.navigate([`/quizz`]);
       } // else
       
     }, // resposta =>

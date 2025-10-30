@@ -356,8 +356,26 @@ DISCIPLINAS ATUAIS:
 {atuais_formatado}
 """
 
+    perfil_txt = ""
+    if perfil:
+        # exemplo de chaves aceitas no perfil
+        horas = perfil.get("horas_estudo_dia", "não informado")
+        tipo  = perfil.get("tipo_aprendiz", "não informado")
+        fam   = perfil.get("familiaridade_metodos", {})
+        foc   = perfil.get("nivel_foco", "não informado")
+        mot   = perfil.get("motivacao_estudo", "não informado")
+        perfil_txt = (
+            "Perfil do aluno:\n"
+            f"- Horas de estudo/dia: {horas}\n"
+            f"- Tipo de aprendiz: {tipo}\n"
+            f"- Familiaridade com métodos: {fam}\n"
+            f"- Nível de foco/concentração: {foc}\n"
+            f"- Motivação para estudar: {mot}\n"
+        )
+        print(perfil_txt)
+
     try:
-        bot_response = llm.gerar_resposta_chat_ollama(user_message, contexto_completo, perfil=perfil)
+        bot_response = llm.gerar_resposta_chat_ollama(user_message, contexto_completo, perfil=perfil_txt)
         if not bot_response.strip():
             bot_response = "Desculpe, tive dificuldade em processar sua pergunta. Pode reformular?"
     except Exception as e:

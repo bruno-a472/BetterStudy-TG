@@ -6,6 +6,7 @@ import { AtualComponent } from './atual/atual.component';
 import { SmsComponent } from './sms/sms.component';
 import { ChatComponent } from './chat/chat.component';
 import { TestComponent } from './test/test.component';
+import { EstudantePerfilComponent } from './estudante-perfil/estudante-perfil.component';
 
 export const routes: Routes = [
 
@@ -18,6 +19,11 @@ export const routes: Routes = [
         path: 'chatbot',
         component: TestComponent,
         title: 'Oi Liéo'
+    },
+    {
+        path: 'quizz',
+        component: EstudantePerfilComponent,
+        title: 'Quizz'
     },
     {
         path: 'login',

@@ -1,0 +1,91 @@
+<div class="perfil-container">
+  <h2>Perfil do Estudante</h2>
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="perfil-form">
+
+    <section formGroupName="familiaridade_metodos" class="card">
+      <h3>Familiaridade com conceitos (1 a 5)</h3>
+      <div class="grid-2">
+        <label class="slider">
+          <span>Pomodoro</span>
+          <input type="range" min="1" max="5" formControlName="pomodoro">
+          <strong>{{ form.get('familiaridade_metodos.pomodoro')?.value }}</strong>
+        </label>
+
+        <label class="slider">
+          <span>Revisão espaçada</span>
+          <input type="range" min="1" max="5" formControlName="revisao_espacada">
+          <strong>{{ form.get('familiaridade_metodos.revisao_espacada')?.value }}</strong>
+        </label>
+
+        <label class="slider">
+          <span>Mapa mental</span>
+          <input type="range" min="1" max="5" formControlName="mapa_mental">
+          <strong>{{ form.get('familiaridade_metodos.mapa_mental')?.value }}</strong>
+        </label>
+
+        <label class="slider">
+          <span>Aprendizado ativo</span>
+          <input type="range" min="1" max="5" formControlName="aprendizado_ativo">
+          <strong>{{ form.get('familiaridade_metodos.aprendizado_ativo')?.value }}</strong>
+        </label>
+
+        <label class="slider">
+          <span>Aprendizado passivo</span>
+          <input type="range" min="1" max="5" formControlName="aprendizado_passivo">
+          <strong>{{ form.get('familiaridade_metodos.aprendizado_passivo')?.value }}</strong>
+        </label>
+
+        <label class="slider">
+          <span>Flashcards</span>
+          <input type="range" min="1" max="5" formControlName="flashcards">
+          <strong>{{ form.get('familiaridade_metodos.flashcards')?.value }}</strong>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Tipo de aprendiz</h3>
+      <div class="row">
+        <select formControlName="tipo_aprendiz">
+          <option *ngFor="let t of tiposAprendiz" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Nível de foco</h3>
+      <div class="row radios">
+        <label *ngFor="let n of niveisFoco" class="radio">
+          <input type="radio" [value]="n.value" formControlName="nivel_foco">
+          <span>{{ n.label }}</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Tempo dedicado aos estudos por dia</h3>
+      <div class="row">
+        <select formControlName="horas_estudo_dia">
+          <option *ngFor="let f of faixasTempo" [value]="f.value">{{ f.label }}</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Motivação para estudar</h3>
+      <textarea
+        formControlName="motivacao_estudo"
+        rows="4"
+        placeholder="Escreva em poucas linhas o porquê você quer estudar e seus objetivos…">
+      </textarea>
+      <small *ngIf="form.get('motivacao_estudo')?.invalid && form.get('motivacao_estudo')?.touched">
+        Escreva pelo menos uma frase (mín. 8 caracteres).
+      </small>
+    </section>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">Salvar perfil</button>
+      <button type="button" class="secondary" (click)="limpar()">Limpar</button>
+    </div>
+  </form>
+</div>

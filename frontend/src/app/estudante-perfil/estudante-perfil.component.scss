@@ -1,0 +1,153 @@
+// === Paleta principal ===
+$azul-principal: #0c75ff;
+$azul-hover: #1b63ec;
+$cinza-borda: #e6e6e6;
+$cinza-claro: #f7f7f7;
+$texto-escuro: #1c1c1c;
+
+// === Container geral ===
+.perfil-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: $azul-principal;
+    text-align: center;
+    font-weight: 700;
+  }
+}
+
+// === Cartões ===
+.card {
+  background: #ffffff;
+  border: 1px solid $cinza-borda;
+  border-radius: 14px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+  h3 {
+    color: $texto-escuro;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid $azul-principal;
+    padding-left: .5rem;
+    font-weight: 600;
+  }
+}
+
+// === Grade de sliders ===
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: .75rem 1rem;
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .5rem 1rem;
+  align-items: center;
+
+  span {
+    grid-column: 1 / -1;
+    font-weight: 500;
+    color: $texto-escuro;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: $azul-principal;
+    cursor: pointer;
+  }
+
+  strong {
+    min-width: 2ch;
+    text-align: right;
+    color: $azul-principal;
+    font-weight: 600;
+  }
+}
+
+// === Seções auxiliares ===
+.row {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+}
+
+.radios .radio {
+  display: inline-flex;
+  gap: .5rem;
+  align-items: center;
+  padding-right: .75rem;
+  color: $texto-escuro;
+
+  input[type='radio'] {
+    accent-color: $azul-principal;
+    cursor: pointer;
+  }
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  padding: .6rem;
+  border-radius: 8px;
+  border: 1px solid $cinza-borda;
+  font-family: inherit;
+  outline: none;
+
+  &:focus {
+    border-color: $azul-principal;
+    box-shadow: 0 0 0 2px rgba($azul-principal, 0.15);
+  }
+}
+
+// === Ações (botões) ===
+.actions {
+  display: flex;
+  gap: .75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+
+  button {
+    padding: .7rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color .25s, transform .1s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+  }
+
+  // === Botão principal ===
+  button[type='submit'] {
+    background-color: $azul-principal;
+    color: white;
+
+    &:hover {
+      background-color: $azul-hover;
+    }
+  }
+
+  // === Botão secundário ===
+  .secondary {
+    background: $cinza-claro;
+    color: $texto-escuro;
+    border: 1px solid $cinza-borda;
+
+    &:hover {
+      background: lighten($cinza-claro, 3%);
+    }
+  }
+}

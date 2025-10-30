@@ -41,24 +41,32 @@ export class BunkerNotasComponent {
         this.materiaService.switchNotasCarregando(); // Service avisa que notas carregaram, trocando variável pra false
         localStorage.setItem('materiasHistoricas', JSON.stringify(resposta['historicas']));
         localStorage.setItem('materiasParciais', JSON.stringify(resposta['parciais']));
-        this.estudanteService.switchAmbienteTeste();
-        console.log('⚠️ Modo de teste desativado após carregar notas locais.');
+
       });
-        console.log("Ambiente de teste obtendo relatório inicial");
-        this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+      const perfilLS = localStorage.getItem('perfil_estudante_v1');
+      const perfil = perfilLS ? JSON.parse(perfilLS) : null;
+      console.log("Ambiente de teste obtendo relatório inicial");
+      setTimeout(() => {
+        this.estudanteService.solicitarRelatorioInicial(this.estudanteService.obtemId(), perfil);
+      }, 2000);
+      this.estudanteService.switchAmbienteTeste();
+      console.log('⚠️ Modo de teste desativado após carregar notas locais.');
       return;
     }
     // Primeiro tenta carregar do localStorage
     const historicasLS = localStorage.getItem('materiasHistoricas');
     const parciaisLS = localStorage.getItem('materiasParciais');
+    const perfilLS = localStorage.getItem('perfil_estudante_v1');
 
     const historicas = historicasLS ? JSON.parse(historicasLS) : null;
     const parciais = parciaisLS ? JSON.parse(parciaisLS) : null;
+    const perfil = perfilLS ? JSON.parse(perfilLS) : null;
 
     if (historicas && historicas.length > 0 && parciais && parciais.length > 0) {
       console.log('✅ Dados carregados do localStorage');
       console.log(historicas);
       console.log(parciais);
+      console.log(perfil);
       // Se tem algo no localStorage, carrega direto de lá
       this.materiaService.atualizaMateriasHistoricas(historicas);
       this.materiaService.atualizaMateriasParciais(parciais);
@@ -69,7 +77,7 @@ export class BunkerNotasComponent {
     }
     console.log("Normalmente obtendo relatório inicial");
       console.log(this.estudanteService.obtemId());
-      this.chatComponent.obterRelatorioInicial(this.estudanteService.obtemId());
+      this.estudanteService.solicitarRelatorioInicial(this.estudanteService.obtemId(), perfil);
   }
 
   atualizaId() {
@@ -111,7 +119,7 @@ export class BunkerNotasComponent {
     console.log('🧹 Cache de notas limpo com sucesso!');
   } // limparCacheNotas
 
-  testarChat(): void {
-    this.estudanteService.solicitarRelatorioInicial(this.estudanteService.obtemId());
-  }
+  // testarChat(): void {
+  //   this.estudanteService.solicitarRelatorioInicial(this.estudanteService.obtemId(), perfil);
+  // }
 }
